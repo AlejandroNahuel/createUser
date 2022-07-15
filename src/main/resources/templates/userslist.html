@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Users' List</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <div th:if="${people != null and !people.empty}">
+            <table>
+                <thead>
+                    <tr>
+                        <tr>
+                            <th>#</th>
+                            <th th:text="#{person.fullName}">Name</th>
+                            <th th:text="#{person.username}">Username</th>
+                            <th th:text="#{person.email}">Email</th>
+                        </tr>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="person, counter : ${people}">
+                        <td>[[${counter.count}]]</td>
+                        <td>[[${person.fullName}]]</td>
+                        <td>[[${person.username}]]</td>
+                        <td>[[${person.email}]]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
