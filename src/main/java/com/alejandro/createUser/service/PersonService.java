@@ -11,9 +11,11 @@ public interface PersonService {
     
     public void delete(Person person);
     
-    public Person findPerson(Person person);
+    public Person findPersonById(Long id);
     
-    public Person findPersonByVerificacionCode(String person);
+    public Person findPersonByVerificacionCode(Person person);
+    
+    public boolean existEmail(String email);
     
     public boolean verify(String verificationCode);
 }

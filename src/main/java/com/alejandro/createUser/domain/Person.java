@@ -27,7 +27,9 @@ public class Person implements Serializable{
     @Email
     private String email;
     
-    @Column
+    @NotEmpty
+    private String password;
+    
     private boolean enabled;
     
     @Column(name="verification_code")

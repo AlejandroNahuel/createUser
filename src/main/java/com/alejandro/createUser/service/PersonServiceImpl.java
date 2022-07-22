@@ -33,18 +33,20 @@ public class PersonServiceImpl implements PersonService{
 
     @Override
     @Transactional(readOnly = true)
-    public Person findPerson(Person person) {
-        return personDao.findById(person.getId()).orElse(null);
+    public Person findPersonById(Long id) {
+        return personDao.findById(id).orElse(null);
     }
 
     @Override
-    public Person findPersonByVerificacionCode(String person) {
-        return personDao.findPersonByVerificationCode(person);
+    @Transactional(readOnly = true)
+    public Person findPersonByVerificacionCode(Person person) {
+        return personDao.findByVerificationCode(person.getVerificationCode());
     }
 
     @Override
+    @Transactional
     public boolean verify(String verificationCode) {
-        Person person = personDao.findPersonByVerificationCode(verificationCode);
+        Person person = personDao.findByVerificationCode(verificationCode);
         
         if(person == null || person.isEnabled()){
             return false;
@@ -52,6 +54,19 @@ public class PersonServiceImpl implements PersonService{
         else{
             personDao.enable(person.getId());
             
+            return true;
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existEmail(String email) {
+        Person person = personDao.findByEmail(email);
+        
+        if(person == null){
+            return false;
+        }
+        else{
             return true;
         }
     }

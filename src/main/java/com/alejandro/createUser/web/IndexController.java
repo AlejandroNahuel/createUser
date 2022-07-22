@@ -2,6 +2,7 @@ package com.alejandro.createUser.web;
 
 import com.alejandro.createUser.domain.Person;
 import com.alejandro.createUser.service.*;
+import com.alejandro.createUser.util.EncryptPassword;
 import com.alejandro.createUser.util.Utility;
 import java.io.UnsupportedEncodingException;
 import javax.mail.MessagingException;
@@ -44,19 +45,33 @@ public class IndexController {
             return "index";
         }
         
-        String verificationCode = RandomString.make(64);
+        String pageTitle;
         
-        person.setVerificationCode(verificationCode);
+        boolean emailExist = personService.existEmail(person.getEmail());
         
-        String siteURL = Utility.getSiteURL(request);
+        if(emailExist){
+            pageTitle = "email_in_use";
+        }
+        else{
+            String verificationCode = RandomString.make(64);
+
+            person.setVerificationCode(verificationCode);
+
+            String siteURL = Utility.getSiteURL(request);
+
+            person.setEnabled(false);
+            
+            EncryptPassword.encoder(person);
+
+            personService.save(person);
+
+            mailSender.sendVerificationEmail(person, siteURL);
+            
+            pageTitle = "registration-success";
+        }
         
-        person.setEnabled(false);
         
-        personService.save(person);
-        
-        mailSender.sendVerificationEmail(person, siteURL);
-        
-        return "registration-success";
+        return "register/" + pageTitle;
     }
     
     @GetMapping("/verify")
